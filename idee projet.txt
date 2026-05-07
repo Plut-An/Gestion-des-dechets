@@ -1,0 +1,84 @@
+restriction pour la quantité des déchets à ramasser
+raison de refus de demande de nettoyage
+evenements : like, commente et participer
+(association : liste des participants pour faire la présence)
+canal de liaison avec l'association (camioneurs)
+indication de capacité de charge
+utiliser la date de création de l'association pour décorer
+notifications revenir si trop plein
+
+
+
+
+à modidier : 
+1 - ce n'est pas forcément des bacs mais par exemple des déchets accumulés
+
+2 - où se trouve l'eco points ? tu ne l'as que comme attribut dans citoyen et c'est tout
+
+3 - le niveau de remplissage était pour le camion ce qui initierait une notification pour le chauffeur
+
+
+base de données : 
+-- 1. Table des UTILISATEURS
+CREATE TABLE utilisateurs (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nom VARCHAR(100) NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    mot_de_passe VARCHAR(255) NOT NULL, -- Sera haché en Node.js
+    role ENUM('citoyen', 'chauffeur', 'agent_tri', 'admin') NOT NULL,
+    solde_points INT DEFAULT 0,
+    langue_preferee ENUM('FR', 'MG') DEFAULT 'FR',
+    date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 2. Table des ASSOCIATIONS
+CREATE TABLE associations (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nom VARCHAR(100) NOT NULL,
+    description TEXT,
+    ville VARCHAR(100),
+    date_inscription TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 3. Table de liaison pour les ADHÉSIONS (Membres)
+CREATE TABLE adhesions (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    utilisateur_id INT,
+    association_id INT,
+    statut ENUM('en_attente', 'accepte', 'refuse') DEFAULT 'en_attente',
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateurs(id),
+    FOREIGN KEY (association_id) REFERENCES associations(id)
+);
+
+-- 4. Table des BACS de collecte
+CREATE TABLE bacs (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    latitude DECIMAL(10, 8) NOT NULL,
+    longitude DECIMAL(11, 8) NOT NULL,
+    type_dechet EN 'organique', 'plastique', 'verre', 'metal') NOT NULL,
+    niveau_remplissage INT DEFAULT 0, -- Pourcentage (0-100)
+    dernier_passage TIMESTAMP
+);
+
+-- 5. Table des SIGNALEMENTS (par les citoyens)
+CREATE TABLE signalements (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    utilisateur_id INT,
+    photo_url VARCHAR(255),
+    latitude DECIMAL(10, 8),
+    longitude DECIMAL(11, 8),
+    description TEXT,
+    statut ENUM('signale', 'en_cours', 'traite') DEFAULT 'signale',
+    date_signalement TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateurs(id)
+);
+
+-- 6. Table des TOURNÉES (pour les chauffeurs)
+CREATE TABLE tournees (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    chauffeur_id INT,
+    itineraire_json JSON, -- Stocke la liste des points calculés par Dijkstra
+    statut ENUM('planifie', 'en_cours', 'termine') DEFAULT 'planifie',
+    date_tournee DATE,
+    FOREIGN KEY (chauffeur_id) REFERENCES utilisateurs(id)
+);
