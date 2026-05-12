@@ -6,6 +6,15 @@ canal de liaison avec l'association (camioneurs)
 indication de capacité de charge
 utiliser la date de création de l'association pour décorer
 notifications revenir si trop plein
+comment distribuer les camionneurs sur les signalements ?
+4. Ce que le Camionneur fait à sa première connexion
+Même si l'admin l'inscrit, il y a souvent une étape qu'on appelle "Activation" :
+
+L'admin entre l'email du camionneur.
+
+Le système génère un mot de passe temporaire.
+
+Le camionneur se connecte et doit changer son mot de passe.
 
 
 
