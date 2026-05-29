@@ -46,5 +46,11 @@ urlpatterns = [
         views.ValiderCitoyenView.as_view(),
         name="admin-valider-citoyen",
     ),
+    # Dashboard — Statistiques
+    path(
+        "admin/dashboard-stats/",
+        views.DashboardStatsView.as_view(),
+        name="admin-dashboard-stats",
+    ),
     path("", include(router.urls)),
 ]

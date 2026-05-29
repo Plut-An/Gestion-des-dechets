@@ -56,4 +56,10 @@ export async function validerCitoyen(userId) {
   return data;
 }
 
+/** Dashboard — Statistiques globales. */
+export async function fetchDashboardStats() {
+  const { data } = await api.get("/admin/dashboard-stats/");
+  return data;
+}
+
 export default api;

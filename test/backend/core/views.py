@@ -6,6 +6,7 @@ Endpoints alignés sur :
   - Exigences algorithmiques : comparaison Baseline vs Dijkstra (services.py).
 """
 from rest_framework import status, viewsets
+from django.db import models
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.decorators import action
 from rest_framework.generics import CreateAPIView
@@ -225,6 +226,37 @@ class CitoyensEnAttenteView(APIView):
             {
                 "count": citoyens.count(),
                 "resultats": serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )
+
+
+class DashboardStatsView(APIView):
+    """
+    Statistiques du tableau de bord administrateur.
+
+    GET /api/admin/dashboard-stats/
+    Retourne les métriques clés : citoyens inscrits, centres de tri, éco-points.
+    """
+
+    permission_classes = [IsAuthenticated, IsAdministrateur]
+
+    def get(self, request):
+        from core.models import CentreDeTri, DepotDechet
+
+        total_citoyens = Citoyen.objects.filter(
+            role=RoleUtilisateur.CITOYEN
+        ).count()
+        total_centres = CentreDeTri.objects.count()
+        total_points = Citoyen.objects.aggregate(
+            total=models.Sum("solde_eco_points")
+        )["total"] or 0
+
+        return Response(
+            {
+                "citoyens_inscrits": total_citoyens,
+                "centres_tri": total_centres,
+                "eco_points_distribues": total_points,
             },
             status=status.HTTP_200_OK,
         )
