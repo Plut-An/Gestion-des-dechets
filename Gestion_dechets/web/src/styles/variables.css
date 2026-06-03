@@ -1,0 +1,68 @@
+/* ============================================================
+   DESIGN SYSTEM — Gestion des Déchets Web
+   Palette écologique, mode sombre par défaut
+   ============================================================ */
+
+:root {
+  /* --- Palette principale --- */
+  --color-primary:        hsl(152, 68%, 39%);   /* Vert écologique */
+  --color-primary-light:  hsl(152, 68%, 52%);
+  --color-primary-dark:   hsl(152, 68%, 28%);
+  --color-primary-glow:   hsla(152, 68%, 39%, 0.25);
+
+  --color-accent:         hsl(195, 80%, 50%);   /* Bleu ciel */
+  --color-accent-light:   hsl(195, 80%, 65%);
+  --color-danger:         hsl(4, 78%, 58%);
+  --color-warning:        hsl(38, 92%, 55%);
+  --color-success:        hsl(152, 68%, 39%);
+
+  /* --- Fonds & surfaces (mode sombre) --- */
+  --bg-base:       hsl(220, 20%, 10%);
+  --bg-surface:    hsl(220, 18%, 14%);
+  --bg-elevated:   hsl(220, 16%, 18%);
+  --bg-hover:      hsl(220, 14%, 22%);
+  --bg-glass:      hsla(220, 18%, 18%, 0.65);
+
+  /* --- Textes --- */
+  --text-primary:   hsl(210, 20%, 95%);
+  --text-secondary: hsl(210, 12%, 65%);
+  --text-muted:     hsl(210, 10%, 45%);
+
+  /* --- Bordures --- */
+  --border-color:   hsla(210, 15%, 30%, 0.6);
+  --border-focus:   var(--color-primary);
+
+  /* --- Rayons --- */
+  --radius-sm:   6px;
+  --radius-md:   12px;
+  --radius-lg:   18px;
+  --radius-xl:   26px;
+  --radius-full: 999px;
+
+  /* --- Ombres --- */
+  --shadow-sm:   0 2px 8px hsla(0, 0%, 0%, 0.3);
+  --shadow-md:   0 4px 20px hsla(0, 0%, 0%, 0.4);
+  --shadow-lg:   0 8px 40px hsla(0, 0%, 0%, 0.5);
+  --shadow-glow: 0 0 24px var(--color-primary-glow);
+
+  /* --- Transitions --- */
+  --transition-fast:   all 0.15s ease;
+  --transition-normal: all 0.25s ease;
+  --transition-slow:   all 0.4s ease;
+
+  /* --- Sidebar --- */
+  --sidebar-width: 250px;
+
+  /* --- Typography --- */
+  --font-sans: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'Fira Code', monospace;
+
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.25rem;
+  --text-2xl:  1.5rem;
+  --text-3xl:  1.875rem;
+  --text-4xl:  2.25rem;
+}

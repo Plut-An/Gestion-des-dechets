@@ -1,0 +1,98 @@
+Documentation Complète — Application de Gestion des Déchets & Écologie
+1. Vue d'Ensemble du Projet
+L'application est une plateforme écologique intégrée qui met en relation quatre acteurs principaux autour d'un objectif commun : la propreté de la ville et l'engagement citoyen. Elle comprend deux volets majeurs :
+
+La collecte collaborative de déchets : Signalement par les citoyens et ramassage optimisé par les camioneurs.
+La manifestation d'intérêt écologique : Événements organisés par des associations où les citoyens peuvent s'investir.
+Le projet est propulsé par un système incitatif : les Éco-Points. Les citoyens gagnent des points en participant à des événements ou en signalant des déchets qui sont ensuite effectivement ramassés.
+
+2. Les Acteurs et Workflows (Parcours Utilisateur)
+🧑‍💻 L'Administrateur (Interface Web)
+L'admin est le garant de la plateforme. Son rôle est de modérer et superviser.
+
+Workflow d'inscription : L'admin valide manuellement l'inscription de chaque nouveau Citoyen et Camioneur pour éviter les faux profils.
+Supervision : Il a accès à un tableau de bord global, gère les associations, et suit l'état des signalements sur une carte (positions GPS des camioneurs).
+🏢 L'Association (Interface Web)
+Les associations animent le volet "Manifestation d'intérêt" du projet.
+
+Membres : Elles reçoivent les demandes d'adhésion des citoyens et peuvent les accepter/refuser.
+Réseau : Elles s'affilient avec des camioneurs de confiance pour des collectes spécifiques.
+Événements : Elles publient des annonces et créent des Événements Écologiques (ex: nettoyage de plage).
+Validation : Le jour de l'événement, l'association valide la présence des participants inscrits. Cette action déclenche l'attribution de +10 Éco-Points au citoyen.
+📱 Le Citoyen (Application Mobile)
+Le citoyen est l'acteur de terrain.
+
+Signalement : S'il voit des déchets encombrants (ou des bacs pleins), il prend une photo, ajoute une description (type de déchet) et l'application capte sa position GPS. Le signalement est envoyé.
+Engagement : Il navigue dans le flux public des associations, demande à en rejoindre certaines, et s'inscrit aux événements écologiques (bouton "Participer").
+Récompense : Si son signalement aboutit (le camioneur valide le ramassage), il gagne +5 Éco-Points.
+🚛 Le Camioneur (Application Mobile)
+Le camioneur s'occupe de la logistique de ramassage.
+
+Géolocalisation : Son application envoie régulièrement sa position GPS actuelle au serveur.
+Logique de proximité : Lorsqu'il consulte la carte, le serveur calcule la distance (via la formule de Haversine) entre lui et tous les signalements non résolus. L'application lui affiche les déchets les plus proches.
+Workflow de Collecte :
+Il choisit un signalement proche et clique sur Accepter (le signalement lui est réservé).
+Il se rend sur place en suivant les coordonnées.
+Une fois les déchets chargés, il clique sur Valider. (Le citoyen gagne ses points).
+S'il y a un problème (ex: déchets inaccessibles ou déjà ramassés), il peut Refuser pour remettre le signalement dans la file d'attente publique.
+3. Documentation des APIs (Endpoints Principaux)
+Toutes les requêtes (sauf login/register) nécessitent un Header : Authorization: Bearer <votre_token_jwt>
+
+🔐 Authentification
+Méthode	Endpoint	Description	Payload typique
+POST	/api/auth/register/citoyen/	Création compte citoyen	email, nom, password, adresse
+POST	/api/auth/register/camioneur/	Création compte camioneur	email, nom, password, numero_permis
+POST	/api/auth/login/	Connexion & récupération token	email, password
+GET	/api/auth/me/	Récupérer profil courant	-
+POST	/api/auth/change-password/	Changement de mot de passe	ancien_mot_de_passe, nouveau_mot_de_passe
+👨‍💻 Administration (/api/admin/)
+Méthode	Endpoint	Description
+GET	.../dashboard/	KPI globaux (comptage utilisateurs, signalements...)
+GET/POST	.../citoyens/	Liste & Création manuelle d'un citoyen
+POST	.../citoyens/{id}/valider/	Activer/Refuser le compte d'un citoyen ({"action": "accepter"})
+GET/POST	.../camioneurs/	Liste & Création manuelle d'un camioneur
+POST	.../camioneurs/{id}/valider/	Activer/Refuser le compte d'un camioneur
+GET/POST	.../associations/	Liste & Création manuelle d'une association
+
+Création d'une association par l'admin
+L'admin crée l'association et fournit directement les identifiants de connexion (email + mot de passe). L'association se connecte ensuite via /api/auth/login/ avec ces identifiants.
+
+Important :
+- L'association ne peut voir que ses propres données : ses adhésions, ses événements, ses annonces.
+- Les citoyens et les autres associations ne voient pas les actions internes de l'association.
+
+🏢 Associations (Espace Web - /api/associations/)
+Méthode	Endpoint	Description
+GET/POST	.../associations/	Liste des associations
+GET	.../{id}/membres/	Citoyens membres de l'association
+GET	.../{id}/adhesions/	Demandes d'adhésion en attente
+POST	.../{id}/adhesions/{id_adh}/action/	Accepter/Refuser l'adhésion d'un citoyen
+POST	.../{id}/evenements/{id_ev}/participants/{id_part}/confirmer/	Valide la présence d'un citoyen à un événement -> donne les points
+📱 Citoyen (Mobile - /api/mobile/)
+Méthode	Endpoint	Description
+GET	.../associations/	Découverte des associations
+POST	.../associations/{id}/rejoindre/	Le citoyen demande à être membre
+GET	.../evenements/	Flux des événements (à venir / en cours)
+POST	.../evenements/{id}/participer/	S'inscrire à l'événement
+GET/POST	.../signalements/	Lister ses propres signalements / Signaler un nouveau déchet
+🚛 Camioneur (Mobile - /api/mobile/camioneur/)
+Méthode	Endpoint	Description
+PUT	.../position/	Met à jour le GPS temps réel ({"latitude": "...", "longitude": "..."})
+GET	.../signalements/?lat=X&lng=Y	Cœur de la logique de proximité : liste les signalements triés par distance (Haversine).
+POST	.../signalements/{id}/accepter/	Assigne le signalement au camioneur.
+POST	.../signalements/{id}/valider/	Termine la course (récompense le citoyen signaleur).
+POST	.../signalements/{id}/refuser/	Libère le signalement pour les autres camioneurs.
+4. Concepts Techniques & Architecture
+Technologie de Base
+Framework : Django 5.x & Django REST Framework (DRF) 3.x
+Base de données : SQLite par défaut (facilement basculable sur PostgreSQL en modifiant le .env).
+Sécurité : Json Web Token (JWT) pour l'authentification cross-plateforme (Mobile & Web).
+Médias : L'upload des photos de signalements et des logos d'associations est géré via la librairie Pillow et stocké dans le dossier media/.
+Calcul de Proximité
+La distance entre un camioneur et les signalements n'utilise pas de base de données géospatiale lourde (comme PostGIS) pour le moment, afin de rester léger. La fonction implémentée côté serveur, appelée Formule de Haversine, calcule de manière très précise la distance en kilomètres entre deux points GPS en tenant compte de la courbure de la Terre.
+
+Système de Documentation Interactive
+Grâce au package drf-spectacular, le code génère en direct une interface Swagger UI (OpenAPI v3). Toute l'équipe front-end ou mobile peut consulter l'URL http://localhost:8000/api/docs/ pour visualiser exactement le format des données JSON attendues en entrée (requête) et en sortie (réponse) pour chaque endpoint.
+
+Extensibilité
+L'architecture est structurée de manière modulaire (accounts, associations, evenements, signalements, collectes). Cela signifie que rajouter un nouveau rôle utilisateur (ex: AgentDeTri) ou un module de messagerie n'impactera pas les autres modules.

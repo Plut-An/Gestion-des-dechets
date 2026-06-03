@@ -1,0 +1,142 @@
+/* Admin Carte GPS */
+.carte-placeholder {
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    135deg,
+    hsla(152, 68%, 39%, 0.06) 0%,
+    hsla(195, 80%, 50%, 0.06) 100%
+  );
+  border: 2px dashed var(--border-color);
+  margin-bottom: 24px;
+}
+.carte-inner {
+  text-align: center;
+}
+.carte-emoji {
+  font-size: 56px;
+  display: block;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+}
+.carte-title {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+.carte-desc {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.carte-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.map-frame {
+  min-height: 420px;
+  margin-bottom: 24px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+}
+
+/* GPS List items */
+.gps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+.gps-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  transition: var(--transition-fast);
+}
+.gps-item--active {
+  border-color: hsla(152, 68%, 39%, 0.3);
+  background: hsla(152, 68%, 39%, 0.05);
+}
+.gps-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px currentColor;
+}
+.gps-info {
+  flex: 1;
+  min-width: 0;
+}
+.gps-name {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.gps-coords {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-top: 2px;
+}
+
+/* Spin animation pour l'icône refresh */
+.spin-icon {
+  animation: spin 0.8s linear infinite;
+}
+
+/* Annonces */
+.annonces-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.annonce-card {
+  transition: var(--transition-normal);
+}
+.annonce-card:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-1px);
+}
+.annonce-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+.annonce-title {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.annonce-date {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+.annonce-contenu {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.7;
+  white-space: pre-wrap;
+}

@@ -1,0 +1,46 @@
+{
+  "expo": {
+    "name": "ÉcoGestion",
+    "slug": "ecogestion-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "ÉcoGestion utilise votre position pour signaler des déchets et trouver les collectes proches."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "ÉcoGestion a besoin d'accéder à vos photos pour les signalements de déchets."
+        }
+      ]
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "mg.ecogestion.mobile"
+    },
+    "android": {
+      "package": "mg.ecogestion.mobile",
+      "usesCleartextTraffic": true,
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "READ_MEDIA_IMAGES"
+      ],
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
